@@ -3,8 +3,13 @@ const router = express.Router();
 const { Post } = require("../models/post.model");
 
 router.get("/", async (req, res) => {
-  const allPosts = await Post.find();
-  return res.status(200).json(allPosts);
+  try {
+    const allPosts = await Post.find();
+    return res.json({ message: "success", data: allPosts });
+  } catch (error) {
+    console.error("error fetching posts:", error);
+    res.status(500).json({ message: "Failed to fetch", error: error });
+  }
 });
 
 router.get("/:id", async (req, res) => {

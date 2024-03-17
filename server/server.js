@@ -5,7 +5,7 @@ const cors = require("cors");
 require("dotenv").config();
 const connectionString = process.env.MONGO_URI;
 const postRouter = require("./routers/postRouter");
-const commentRouter = require("./routers/commentRouter");
+// const commentRouter = require("./routers/commentRouter");
 
 const app = express();
 
@@ -14,7 +14,7 @@ app.use(express.json());
 const PORT = 3000;
 
 app.use("/posts", postRouter);
-app.use("/comments", commentRouter);
+// app.use("/comments", commentRouter);
 
 app.use(
   cors({
