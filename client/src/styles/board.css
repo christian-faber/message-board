@@ -1,0 +1,5 @@
+.board {
+  overflow-y: scroll;
+  border: solid lightgray 1px;
+  background: darkblue;
+}

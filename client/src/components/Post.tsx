@@ -1,10 +1,11 @@
+import "../styles/post.css";
 interface PostProps {
   postText: string;
 }
 
 const Post: React.FC<PostProps> = ({ postText }) => {
   return (
-    <div>
+    <div className="post">
       <p>{postText}</p>
     </div>
   );

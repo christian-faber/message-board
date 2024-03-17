@@ -1,44 +1,56 @@
+import { useEffect, useState } from "react";
 import "./App.css";
-import { useState, useEffect } from "react";
-import Status from "./components/Status";
 import Post from "./components/Post";
 
 function App() {
-  const [serverData, setServerData] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [post, setPost] = useState("");
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    fetchData();
+    const fetchPosts = async () => {
+      const response = await fetch("http://localhost:3000/posts");
+      const { data } = await response.json();
+      setPosts(data);
+      console.log(data);
+    };
+    fetchPosts();
   }, []);
 
-  const fetchData = async () => {
-    try {
-      const response = await fetch("http://localhost:3000");
-      if (!response.ok) {
-        throw new Error("Failed to fetch data from the server");
-      }
-      const data = await response.text(); // Extract the text from the response
-      setServerData(data);
-    } catch (error) {
-      setError(error);
-    } finally {
-      setIsLoading(false);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setPost("");
+    console.log("Post is good");
+    console.log(post);
+
+    const response = await fetch("http://localhost:3000/posts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ post: post }),
+    });
+
+    if (!response.ok) {
+      console.log(response);
+      console.error("Failed to post message");
     }
   };
 
   return (
     <div>
-      <Status />
-      <Post />
-      <h1>Data from Server:</h1>
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : error ? (
-        <p>Error: {error.message}</p>
-      ) : (
-        <p>{serverData}</p>
-      )}
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Howzit?"
+          value={post}
+          onChange={(e) => setPost(e.target.value)}
+        />
+        <button type="submit">Submit</button>
+      </form>
+      <div>
+        {posts.length &&
+          posts.map((post) => <Post key={post._id} postText={post.post} />)}
+      </div>
     </div>
   );
 }
