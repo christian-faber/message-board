@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const { MongoClient } = require("mongodb");
+// const { MongoClient } = require("mongodb");
 const cors = require("cors");
 require("dotenv").config();
 const connectionString = process.env.MONGO_URI;
@@ -13,11 +13,8 @@ app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 const PORT = 3000;
 
-app.use("./posts", postRouter);
-app.use("./comments", commentRouter);
-
-const { Post } = require("./models/post.model");
-const { Comment } = require("./models/comment.model");
+app.use("/posts", postRouter);
+app.use("/comments", commentRouter);
 
 app.use(
   cors({

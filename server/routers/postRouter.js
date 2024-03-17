@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { Post } = require("../models/post.model");
 
 router.get("/", async (req, res) => {
   const allPosts = await Post.find();

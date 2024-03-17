@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const PostSchema = new mongoose.Schema({
   id: String,
   post: String,
-  likes: Number,
+  // likes: Number,
 });
 
 const Post = mongoose.model("Post", PostSchema);
