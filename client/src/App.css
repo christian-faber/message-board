@@ -40,3 +40,9 @@
 .read-the-docs {
   color: #888;
 }
+
+.board {
+  overflow-y: scroll;
+  border: solid lightgray 1px;
+  background: darkblue;
+}

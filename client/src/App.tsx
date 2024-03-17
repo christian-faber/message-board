@@ -2,42 +2,88 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import Post from "./components/Post";
 
+interface PostData {
+  _id: string;
+  post: string;
+}
+
 function App() {
   const [post, setPost] = useState("");
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<PostData[]>([]);
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    fetchPosts();
+  }, []);
+
+  const fetchPosts = async () => {
+    try {
       const response = await fetch("http://localhost:3000/posts");
       const { data } = await response.json();
       setPosts(data);
       console.log(data);
-    };
-    fetchPosts();
-  }, []);
+    } catch (error) {
+      console.error("Failed to fetch posts:", error);
+    }
+  };
+
+  const deletePost = async (postId: string) => {
+    try {
+      const response = await fetch(`http://localhost:3000/posts/${postId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete post");
+      }
+
+      fetchPosts();
+
+      console.log("Post deleted successfully");
+    } catch (error) {
+      console.error("Failed to delete post:", error);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setPost("");
-    console.log("Post is good");
-    console.log(post);
 
-    const response = await fetch("http://localhost:3000/posts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ post: post }),
-    });
+    try {
+      const response = await fetch("http://localhost:3000/posts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ post: post }),
+      });
 
-    if (!response.ok) {
-      console.log(response);
-      console.error("Failed to post message");
+      if (!response.ok) {
+        throw new Error("Failed to post message");
+      }
+
+      setPost("");
+
+      fetchPosts();
+    } catch (error) {
+      console.error("Failed to post message:", error);
     }
   };
 
   return (
     <div>
+      <div className="board">
+        {posts.length > 0 ? (
+          posts.map((post) => (
+            <Post
+              key={post._id}
+              postId={post._id}
+              postText={post.post}
+              deletePost={deletePost}
+            />
+          ))
+        ) : (
+          <p>No posts available</p>
+        )}
+      </div>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -47,10 +93,6 @@ function App() {
         />
         <button type="submit">Submit</button>
       </form>
-      <div>
-        {posts.length &&
-          posts.map((post) => <Post key={post._id} postText={post.post} />)}
-      </div>
     </div>
   );
 }
