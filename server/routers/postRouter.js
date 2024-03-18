@@ -26,7 +26,7 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  await Post.updateOne({ id }, req.body);
+  await Post.updateOne({ _id: id }, req.body);
   const updatedPost = await Post.findById(id);
   return res.status(200).json(updatedPost);
 });
