@@ -20,7 +20,6 @@ function App() {
       const response = await fetch("http://localhost:3000/posts");
       const { data } = await response.json();
       setPosts(data);
-      console.log(data);
     } catch (error) {
       console.error("Failed to fetch posts:", error);
     }
@@ -41,6 +40,30 @@ function App() {
       console.log("Post deleted successfully");
     } catch (error) {
       console.error("Failed to delete post:", error);
+    }
+  };
+
+  const updatePost = async (postId: string, newText: string) => {
+    try {
+      const response = await fetch(`http://localhost:3000/posts/${postId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ post: newText }),
+      });
+
+      console.log("updatePost,id & new text", postId, newText);
+
+      if (!response.ok) {
+        throw new Error("Failed to update post");
+      }
+
+      fetchPosts();
+
+      console.log("Post updated successfully");
+    } catch (error) {
+      console.error("Failed to update post:", error);
     }
   };
 
@@ -78,6 +101,7 @@ function App() {
               postId={post._id}
               postText={post.post}
               deletePost={deletePost}
+              updatePost={updatePost}
             />
           ))
         ) : (
