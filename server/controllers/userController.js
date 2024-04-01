@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const User = require("../models/user.model");
 
 const listUsers = async (req, res) => {
   let statusCode = 500;

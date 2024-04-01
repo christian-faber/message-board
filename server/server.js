@@ -4,6 +4,10 @@ const morgan = require("morgan");
 const cors = require("cors");
 require("dotenv").config();
 const connectionString = process.env.MONGO_URI;
+const passport = require("passport");
+const { Strategy, ExtractJwt } = require("passport-jwt");
+
+const SECRET = process.env.JWT_SECRET;
 
 //middleware goes before using routes!!!!!!
 const app = express();
@@ -15,11 +19,6 @@ app.use(
 app.use(morgan("combined"));
 app.use(express.json());
 const PORT = 3000;
-
-const postRouter = require("./routers/postRouter");
-app.use("/posts", postRouter);
-const userRouter = require("./routers/userRouter");
-app.use("/users", userRouter);
 
 mongoose
   .connect(connectionString)
@@ -69,6 +68,13 @@ passport.use(
     }
   })
 );
+
+const postRouter = require("./routes/postRouter");
+const authRouter = require("./routes/authRouter.js");
+const userRouter = require("./routes/userRouter");
+const { env } = require("process");
+app.use("/posts", postRouter);
+app.use("/users", checkIsAuthenticated, userRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
