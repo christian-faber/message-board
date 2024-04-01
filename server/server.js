@@ -6,6 +6,7 @@ require("dotenv").config();
 const connectionString = process.env.MONGO_URI;
 const passport = require("passport");
 const { Strategy, ExtractJwt } = require("passport-jwt");
+const errorHandler = require("./middleware/errorHandler.js");
 
 const SECRET = process.env.JWT_SECRET;
 
@@ -30,7 +31,7 @@ mongoose
 
 const checkIsAuthenticated = (req, res, next) => {
   passport.authenticate("jwt", (err, user, info) => {
-    console.log("IN AUTH CALLBACK", {
+    console.log("CheckIsAuth: IN AUTH CALLBACK", {
       err,
       user,
       info,
@@ -76,6 +77,8 @@ const { env } = require("process");
 app.use("/auth", authRouter);
 app.use("/posts", checkIsAuthenticated, postRouter);
 app.use("/users", checkIsAuthenticated, userRouter);
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
