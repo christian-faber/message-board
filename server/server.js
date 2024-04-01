@@ -73,7 +73,8 @@ const postRouter = require("./routes/postRouter");
 const authRouter = require("./routes/authRouter.js");
 const userRouter = require("./routes/userRouter");
 const { env } = require("process");
-app.use("/posts", postRouter);
+app.use("/auth", authRouter);
+app.use("/posts", checkIsAuthenticated, postRouter);
 app.use("/users", checkIsAuthenticated, userRouter);
 
 app.listen(PORT, () => {
