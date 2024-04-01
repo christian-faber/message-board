@@ -24,7 +24,7 @@ const PORT = 3000;
 mongoose
   .connect(connectionString)
   .then((db) => {
-    console.log("Connected to the database…");
+    console.log("Connected to the database…", db);
     return db;
   })
   .catch((err) => console.log("Connection error:", err));
