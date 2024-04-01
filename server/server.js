@@ -7,6 +7,7 @@ const connectionString = process.env.MONGO_URI;
 const passport = require("passport");
 const { Strategy, ExtractJwt } = require("passport-jwt");
 const errorHandler = require("./middleware/errorHandler.js");
+const User = require("./models/user.model.js");
 
 const SECRET = process.env.JWT_SECRET;
 
@@ -24,7 +25,7 @@ const PORT = 3000;
 mongoose
   .connect(connectionString)
   .then((db) => {
-    console.log("Connected to the database…", db);
+    console.log("Connected to the database…");
     return db;
   })
   .catch((err) => console.log("Connection error:", err));
